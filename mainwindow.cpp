@@ -84,7 +84,6 @@ void MainWindow::on_pushButton_random_clicked()
     static int click_num = 1;
     srand(clock());
     double x = rand() % 1000;
-    srand(clock());
     double y = rand() % 1000;
 
     QString name = QString("test ") + QString::number(click_num++, 10);
