@@ -36,4 +36,5 @@ HEADERS += \
     kruskal.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    resultwidget.ui
