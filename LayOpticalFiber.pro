@@ -26,15 +26,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    resultwidget.cpp
+    resultwidget.cpp \
+    imagedialog.cpp
 
 HEADERS += \
         mainwindow.h \
     building.h \
     resultwidget.h \
     heapsort.h \
-    kruskal.h
+    kruskal.h \
+    imagedialog.h
 
 FORMS += \
         mainwindow.ui \
-    resultwidget.ui
+    resultwidget.ui \
+    imagedialog.ui

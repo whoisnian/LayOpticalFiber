@@ -34,6 +34,7 @@ void ResultWidget::setActivatedRadio(int index)
 
 void ResultWidget::updateRadio(void)
 {
+
     double min_x = 1000, min_y = 1000, max_x = 0, max_y = 0;
     for(int i = 1;i < int(buildings.size());i++)
     {
@@ -42,9 +43,14 @@ void ResultWidget::updateRadio(void)
         max_x = std::max(buildings[i].x, max_x);
         max_y = std::max(buildings[i].y, max_y);
     }
-    improve = std::max((max_x - min_x) / (this->width() - 50), (max_y - min_y) / (this->height() - 50));
+    //当只有一个点时，直接画到中间，不需要缩放
+    if(buildings.size() > 2)
+        improve = std::max((max_x - min_x) / (this->width() - 50), (max_y - min_y) / (this->height() - 50));
+    else
+        improve = 1;
     ori_x = min_x / improve - (this->width() - (max_x - min_x) / improve) / 2;
     ori_y = min_y / improve - (this->height() - (max_y - min_y) / improve) / 2;
+
 
     QList<QAbstractButton *> buttons = radiogroup.buttons();
     for(int i = 0;i < buttons.size();i++)

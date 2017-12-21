@@ -21,6 +21,8 @@ public:
 private slots:
     void on_action_import_triggered(); //从文件导入数据
 
+    void on_action_image_triggered();
+
     void on_action_exit_triggered(); //退出程序
 
     void on_pushButton_add_clicked(); //添加建筑

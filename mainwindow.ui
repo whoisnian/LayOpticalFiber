@@ -154,7 +154,7 @@
          <number>3</number>
         </property>
         <attribute name="horizontalHeaderVisible">
-         <bool>true</bool>
+         <bool>false</bool>
         </attribute>
         <attribute name="horizontalHeaderCascadingSectionResizes">
          <bool>true</bool>
@@ -219,6 +219,7 @@
      <string>文件</string>
     </property>
     <addaction name="action_import"/>
+    <addaction name="action_image"/>
     <addaction name="separator"/>
     <addaction name="action_exit"/>
    </widget>
@@ -233,6 +234,11 @@
   <action name="action_exit">
    <property name="text">
     <string>退出</string>
+   </property>
+  </action>
+  <action name="action_image">
+   <property name="text">
+    <string>从图片导入</string>
    </property>
   </action>
  </widget>

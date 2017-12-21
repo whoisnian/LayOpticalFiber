@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "kruskal.h"
+#include "imagedialog.h"
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QFileDialog>
@@ -128,4 +129,23 @@ void MainWindow::on_tableWidget_buildings_activated()
 {
     ui->widget_result->setActivatedRadio(ui->tableWidget_buildings->currentRow());
     qDebug() << "高亮：" << buildings[ui->tableWidget_buildings->currentRow()+1].name.c_str();
+}
+
+void MainWindow::on_action_image_triggered()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, "选择要打开的图片", "/", "Images (*.png *.jpeg *.jpg)");
+    if(fileName == NULL)
+        return;
+    ImageDialog *imagedialog = new ImageDialog;
+    imagedialog->setimage(fileName, this->width(), this->height());
+    imagedialog->exec();
+    for(int i = 1;i < int(imagedialog->buildings.size());i++)
+    {
+        this->buildings.push_back(imagedialog->buildings.at(i));
+        addBuilding();
+    }
+    this->buildings = imagedialog->buildings;
+    ui->widget_result->setBuildings(buildings);
+    ui->widget_result->setResult(kruskal(buildings));
+    ui->widget_result->repaint();
 }
