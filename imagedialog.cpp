@@ -1,6 +1,5 @@
 #include "imagedialog.h"
 #include "ui_imagedialog.h"
-#include <QDebug>
 #include <QInputDialog>
 #include <QPainter>
 

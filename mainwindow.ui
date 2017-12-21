@@ -214,7 +214,7 @@
      <height>24</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menu">
+   <widget class="QMenu" name="menu_file">
     <property name="title">
      <string>文件</string>
     </property>
@@ -223,7 +223,7 @@
     <addaction name="separator"/>
     <addaction name="action_exit"/>
    </widget>
-   <addaction name="menu"/>
+   <addaction name="menu_file"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="action_import">
@@ -239,6 +239,11 @@
   <action name="action_image">
    <property name="text">
     <string>从图片导入</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="text">
+    <string>关于</string>
    </property>
   </action>
  </widget>

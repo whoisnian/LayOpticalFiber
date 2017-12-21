@@ -5,8 +5,8 @@
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QFileDialog>
+#include <QMessageBox>
 #include <QFile>
-#include <QDebug>
 #include <vector>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -20,6 +20,8 @@ MainWindow::MainWindow(QWidget *parent) :
     header << "建筑名称" << "X坐标" << "Y坐标";
     ui->tableWidget_buildings->setHorizontalHeaderLabels(header);
     buildings.push_back(Building());
+    ui->widget_result->setBuildingTable(ui->tableWidget_buildings);
+    ui->widget_result->setBar(ui->statusBar);
 }
 
 MainWindow::~MainWindow()
@@ -36,7 +38,7 @@ void MainWindow::addBuilding()
     ui->tableWidget_buildings->setItem(buildings.size()-2, 0, Name);
     ui->tableWidget_buildings->setItem(buildings.size()-2, 1, X);
     ui->tableWidget_buildings->setItem(buildings.size()-2, 2, Y);
-    qDebug() << "添加：" << buildings.back().name.c_str() << buildings.back().x << buildings.back().y;
+    ui->statusBar->showMessage(QString("添加：") + QString(buildings.back().name.c_str()));
 }
 
 void MainWindow::on_action_import_triggered()
@@ -54,6 +56,25 @@ void MainWindow::on_action_import_triggered()
         addBuilding();
     }
     file.close();
+    ui->widget_result->setBuildings(buildings);
+    ui->widget_result->setResult(kruskal(buildings));
+    ui->widget_result->repaint();
+}
+
+void MainWindow::on_action_image_triggered()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, "选择要打开的图片", "/", "Images (*.png *.jpeg *.jpg)");
+    if(fileName == NULL)
+        return;
+    ImageDialog *imagedialog = new ImageDialog;
+    imagedialog->setimage(fileName, this->width(), this->height());
+    imagedialog->exec();
+    for(int i = 1;i < int(imagedialog->buildings.size());i++)
+    {
+        this->buildings.push_back(imagedialog->buildings.at(i));
+        addBuilding();
+    }
+    this->buildings = imagedialog->buildings;
     ui->widget_result->setBuildings(buildings);
     ui->widget_result->setResult(kruskal(buildings));
     ui->widget_result->repaint();
@@ -103,7 +124,7 @@ void MainWindow::on_pushButton_delete_clicked()
          QMessageBox::information(this, "缺少目标", "请在右侧窗口选中要删除的目标后再进行删除", QMessageBox::Ok, QMessageBox::Ok);
          return;
     }
-    qDebug() << "删除：" << buildings[row+1].name.c_str() << buildings[row+1].x << buildings[row+1].y;
+    ui->statusBar->showMessage(QString("删除：") + QString(buildings[row+1].name.c_str()));
 
     ui->tableWidget_buildings->removeRow(row);
     buildings.erase(buildings.begin() + row + 1);
@@ -122,30 +143,11 @@ void MainWindow::on_pushButton_clear_clicked()
     ui->tableWidget_buildings->clearContents();
     ui->tableWidget_buildings->setRowCount(int(buildings.size())-1);
     ui->widget_result->repaint();
-    qDebug() << "清空";
+    ui->statusBar->showMessage(QString("已清空"));
 }
 
 void MainWindow::on_tableWidget_buildings_activated()
 {
     ui->widget_result->setActivatedRadio(ui->tableWidget_buildings->currentRow());
-    qDebug() << "高亮：" << buildings[ui->tableWidget_buildings->currentRow()+1].name.c_str();
-}
-
-void MainWindow::on_action_image_triggered()
-{
-    QString fileName = QFileDialog::getOpenFileName(this, "选择要打开的图片", "/", "Images (*.png *.jpeg *.jpg)");
-    if(fileName == NULL)
-        return;
-    ImageDialog *imagedialog = new ImageDialog;
-    imagedialog->setimage(fileName, this->width(), this->height());
-    imagedialog->exec();
-    for(int i = 1;i < int(imagedialog->buildings.size());i++)
-    {
-        this->buildings.push_back(imagedialog->buildings.at(i));
-        addBuilding();
-    }
-    this->buildings = imagedialog->buildings;
-    ui->widget_result->setBuildings(buildings);
-    ui->widget_result->setResult(kruskal(buildings));
-    ui->widget_result->repaint();
+    ui->statusBar->showMessage(ui->tableWidget_buildings->item(ui->tableWidget_buildings->currentRow(), 0)->text());
 }

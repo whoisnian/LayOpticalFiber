@@ -2,6 +2,7 @@
 #include "ui_resultwidget.h"
 #include <QPainter>
 #include <QRadioButton>
+#include <QStatusBar>
 #include <algorithm>
 
 ResultWidget::ResultWidget(QWidget *parent) :
@@ -9,6 +10,8 @@ ResultWidget::ResultWidget(QWidget *parent) :
     ui(new Ui::ResultWidget)
 {
     ui->setupUi(this);
+    radiogroup = new QButtonGroup;
+    connect(radiogroup , SIGNAL(buttonClicked(int)),this,SLOT(radiogroup_buttonClicked()));
 }
 
 ResultWidget::~ResultWidget()
@@ -29,7 +32,17 @@ void ResultWidget::setResult(std::vector<Edge> result)
 
 void ResultWidget::setActivatedRadio(int index)
 {
-    radiogroup.button(index)->setChecked(true);
+    radiogroup->button(index)->setChecked(true);
+}
+
+void ResultWidget::setBuildingTable(QTableWidget *table)
+{
+    buildingtable = table;
+}
+
+void ResultWidget::setBar(QStatusBar *bar)
+{
+    statusbar = bar;
 }
 
 void ResultWidget::updateRadio(void)
@@ -52,11 +65,11 @@ void ResultWidget::updateRadio(void)
     ori_y = min_y / improve - (this->height() - (max_y - min_y) / improve) / 2;
 
 
-    QList<QAbstractButton *> buttons = radiogroup.buttons();
+    QList<QAbstractButton *> buttons = radiogroup->buttons();
     for(int i = 0;i < buttons.size();i++)
     {
         buttons.at(i)->setVisible(false);
-        radiogroup.removeButton(buttons.at(i));
+        radiogroup->removeButton(buttons.at(i));
     }
     for(int i = 1;i < int(buildings.size());i++)
     {
@@ -66,9 +79,16 @@ void ResultWidget::updateRadio(void)
         radio->setToolTipDuration(-1);
         radio->setCheckable(true);
         radio->setVisible(true);
-        radiogroup.addButton(radio);
-        radiogroup.setId(radio, i-1);
+        radiogroup->addButton(radio);
+        radiogroup->setId(radio, i-1);
     }
+}
+
+void ResultWidget::radiogroup_buttonClicked()
+{
+    radiogroup->checkedId();
+    buildingtable->selectRow(radiogroup->checkedId());
+    statusbar->showMessage(radiogroup->checkedButton()->toolTip());
 }
 
 void ResultWidget::paintEvent(QPaintEvent *)
