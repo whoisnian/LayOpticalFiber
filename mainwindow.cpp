@@ -74,7 +74,6 @@ void MainWindow::on_action_image_triggered()
         this->buildings.push_back(imagedialog->buildings.at(i));
         addBuilding();
     }
-    this->buildings = imagedialog->buildings;
     ui->widget_result->setBuildings(buildings);
     ui->widget_result->setResult(kruskal(buildings));
     ui->widget_result->repaint();
